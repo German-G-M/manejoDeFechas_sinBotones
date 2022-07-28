@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>probando selección sin usar botones</h1>
+    <fieldset>
+        <legend> Selecciona la fecha o el rango de fechas</legend>
+        <input type="radio" name="rango_fecha" id="uf" onclick="manejoClick(this)" value="1" checked="checked">Un dia
+        <!--con "this" envío el elemento-->
+        <input type="radio" name="rango_fecha" id="rf" onclick="manejoClick(this)" value="2">Rango Fecha<br>
+        <input type="date" name="fecha_inicio" id="fi">
+        <input type="date" name="fecha_final" id="ff" style="display:none;">
+        <!--al principio lo ocultamos por que por defecto será solo un día-->
+    </fieldset>
+    <fieldset>
+        <legend>Datos </legend>
+        <div id="datos"></div>
+    </fieldset>
+    <fieldset>
+        <legend>Datos que se enviaran a la Base de Datos</legend>
+        <div id="datos_db"></div>
+    </fieldset>
+    <button id="nueva_fecha">Consultar nueva fecha</button>
+
+    <script>
+        function manejoClick(seleccionado) {
+            //valorDefecto = document.querySelector('input[name=rango_fecha]:checked').value //obtenemos el valor seleccionado por defecto
+            limpiarTodo()//función que limpiará todos los datos ingresados
+            console.log("Radio boton seleccionado--->" + seleccionado.value);
+            if (seleccionado.value == 2) {//si es 2 mostramos ambos calendarios
+                ff.style.display = '';
+            } else {
+                //caso contario solo mostramos un calendario
+                ff.style.display = 'none';
+            }
+        }
+
+
+        slc = document.querySelector('input[name=rango_fecha]:checked').value //obtenemos el valor seleccionado por defecto
+        console.log("DATO SELECCIONADO-->" + slc)
+
+        fi.addEventListener('change', function () {
+            console.log("se selecciono la fecha de inicio: " + fi.value)
+            //alert("se selecciono la fecha de inicio")
+            datos.innerHTML = `<b>Ventas del día : </b>${fi.value}<br>`
+            let fecha = new Date(`${fi.value}T00:00:00`);//añado la hora en ceros para para que quede la fecha correcta (sin la hora, al mostrar el objeto date me resta un dia)
+            console.log("fecha seleccionada-->", fecha)
+
+            if (document.getElementById("uf").checked == true) { //si el de una fecha esta seleccionado mostramos, si no no.
+                let nueva_fecha = new Date(`${fi.value}T00:00:00`)
+                nueva_fecha.setDate(nueva_fecha.getDate() + 1); //aumento un dia a la fecha ingresada
+                console.log("fecha añadida-->", nueva_fecha)
+                datos_db.innerHTML = `<b>fecha inicial: </b>${fi.value}<br><b>fecha final: </b>${nueva_fecha.getFullYear()}-${(nueva_fecha.getMonth() + 1) < 10 ? "0" + (nueva_fecha.getMonth() + 1) : nueva_fecha.getMonth() + 1}-${nueva_fecha.getDate()}`
+            }
+
+        })
+
+        ff.addEventListener('change', function () {//este solo se activará si la selección es "rango"
+            console.log("se selecciono la fecha final" + ff.value)
+            let fecha_inicial = new Date(`${fi.value}T00:00:00`);
+            let fecha_final = new Date(`${ff.value}T00:00:00`);
+
+            let fecha_final_para_bd = new Date(`${ff.value}T00:00:00`)
+            fecha_final_para_bd.setDate(fecha_final_para_bd.getDate() + 1)//aumentamos un dia a la fecha final
+            //calculo la diferencia de días
+            let diferencia_horas = fecha_final.getTime() - fecha_inicial.getTime();
+            let diferencia_dias = Math.round(diferencia_horas / (1000 * 60 * 60 * 24))
+            console.log(diferencia_horas, diferencia_dias);
+            if (diferencia_dias <= 0) {
+                alert("debe ingresar un rango igual o mayor a 2 dias.\nVuelva a intentarlo nuevamente")
+                limpiarTodo();
+            } else {
+                //alert("se selecciono la fecha de inicio")
+                datos.innerHTML = `<b>Ventas desde el dia: </b>${fi.value}<br><b> hasta el dia: </b>${ff.value}<br> Datos de ${diferencia_dias + 1} días`
+                datos_db.innerHTML = `<b>fecha inicial: </b>${fi.value}<br><b>fecha final: </b>${fecha_final_para_bd.getFullYear()}-${(fecha_final_para_bd.getMonth() + 1) < 10 ? "0" + (fecha_final_para_bd.getMonth() + 1) : fecha_final_para_bd.getMonth() + 1}-${fecha_final_para_bd.getDate()}`
+            }
+
+
+        })
+
+        fechainicio = document.getElementById("fi").value
+        fechafinal = ff.value
+        console.log("fecha inicio--->" + fechainicio)
+        console.log("fecha final--->" + fechafinal)
+        //datos.innerHTML = `<b>fecha inicial</b>${fechainicio}<br><b>fecha final</b>${fechafinal}`
+        nueva_fecha.addEventListener('click', function () {
+            location.reload()
+        })
+        function limpiarTodo() {
+            fi.value = "";
+            ff.value = "";
+            datos.innerHTML = "";
+            datos_db.innerHTML = "";
+        }
+    </script>
+</body>
+
+</html>
