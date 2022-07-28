@@ -1,0 +1,15 @@
+El objetivo del trabajo es seleccionar fechas sin el uso de botones.
+
+-Utilizaremos funciones "onclick" sobre elmentos de radio botones.
+-usaremos "inputs" de tipo "date"
+-trabajaremos con "style.display"
+-leeremos los campos de fechas y los convertiremos en objetos "date" para manejar la diferencia de días
+-Utilizaremos los diferentes métodos del "date" para extraer el año, el mes y el día.
+
+-el método "getMoth()" me trae el mes en numeros. Va desde 0 a 11.
+Por lo que debmeos añadir +1 para obtener el mes exacto
+
+-para medir la diferencia de fechas, convertimos en tiempo la "fecha final" y la "fecha inicial"
+usando el metodo getTime()
+
+
