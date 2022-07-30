@@ -13,3 +13,12 @@ Por lo que debmeos añadir +1 para obtener el mes exacto
 usando el metodo getTime()
 
 
+En el caso de una sola fecha, se dispara los resultados justo cuando se termina de introducir la fecha.
+También debe suceder que solo debe mostrarse los datos cuando el campo fecha NO ESTÉ VACÍO
+Esto para evitar que salga error al "borrar" la fecha desde el calendario
+
+En el caso del rango de fechas, el resultado debe dispararse cuando ambos campos estén llenos.
+Si se intenta llenar la 2da fecha y el primero esta vacío, salta una alerta y borra los camposs fecha
+Si la primera fecha se modifica, la segunda fecha vuelve a vacío y se boora los datso mostrados
+
+debo crear una función que al intentar hacer click en una fecha posterior me indique que no hay ventas
